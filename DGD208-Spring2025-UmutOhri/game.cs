@@ -41,7 +41,10 @@ namespace DGD208_Spring2025_UmutOhri
                 {
                     _mainMenu.Display();
                     int choice = _mainMenu.GetChoice();
-                    ProcessMainMenuChoice(choice);
+                ProcessMenuChoice(choice);
+
+                // Pet statlarını güncelle (her döngüde)
+                UpdatePets();
                 }
             }
 
