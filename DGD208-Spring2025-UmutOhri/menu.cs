@@ -1,57 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGD208_Spring2025_UmutOhri
-
-
-  
+{
+    public class Menu
     {
-        public class Menu
+        private string title;
+        private List<string> options;
+
+        public Menu(string title, List<string> options)
+        {
+            this.title = title;
+            this.options = options;
+        }
+
+        public void Display()
         {
            
-        private string _title;
-            private List<string> _options;
-
-            public Menu(string title, List<string> options)
+            Console.WriteLine($"\n=== {title} ===", ConsoleColor.Cyan);
+            for (int i = 0; i < options.Count; i++)
             {
-                _title = title;
-                _options = options;
+                Console.WriteLine($"{i + 1}. {options[i]}");
             }
-
-            public void Display()
-            {
-                Console.WriteLine($"\n=== {_title} ===");
-                for (int i = 0; i < _options.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}. {_options[i]}");
-                }
-                Console.Write("Enter your choice: ");
-            Console.Clear();
-            ConsoleHelper.WriteCentered($"=== {_title} ===", ConsoleColor.Cyan);
-
-            for (int i = 0; i < _options.Count; i++)
-            {
-                string menuItem = $"{i + 1}. {_options[i]}";
-                ConsoleHelper.WriteCentered(menuItem);
-            }
-
             ConsoleHelper.WriteCentered("\nEnter your choice: ", ConsoleColor.Yellow);
+
         }
+       
 
-            public int GetChoice()
+        public int GetChoice()
+        {
+            int choice;
+            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > options.Count)
             {
-                int choice;
-                while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > _options.Count)
-                {
-                    Console.WriteLine("Invalid input. Please try again.");
-                    Display();
-                }
-                return choice;
+                Console.WriteLine("Invalid input. Please try again.");
+                Display();
             }
-
+            return choice;
         }
     }
-
+}
