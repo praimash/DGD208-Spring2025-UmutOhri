@@ -7,7 +7,7 @@
         Cat,
         Bird,
         Fish,
-        Rabbit,
-        Dragon // Özel bir pet ekleyebilirsiniz
+        Rabbit
+       
     }
 }
