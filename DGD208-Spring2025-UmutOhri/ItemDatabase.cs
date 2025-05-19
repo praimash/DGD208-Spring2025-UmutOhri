@@ -1,0 +1,19 @@
+﻿using System;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace DGD208_Spring2025_UmutOhri
+{
+    public static class ItemDatabase
+    {
+        public static List<Item> Items = new List<Item>
+        {
+            new Item("Dry Food", ItemType.Food, 20, 2, new PetType[] { PetType.Dog, PetType.Cat }),
+            new Item("Fish Flakes", ItemType.Food, 15, 1, new PetType[] { PetType.Fish }),
+            new Item("Chew Toy", ItemType.Toy, 15, 3, new PetType[] { PetType.Dog }),
+            new Item("Feather Toy", ItemType.Toy, 25, 5, new PetType[] { PetType.Cat, PetType.Bird }),
+            new Item("Cozy Bed", ItemType.Bed, 30, 10, new PetType[] { PetType.Dog, PetType.Cat, PetType.Rabbit })
+        };
+    }
+}

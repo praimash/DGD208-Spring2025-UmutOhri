@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DGD208_Spring2025_UmutOhri
 {
@@ -18,8 +20,6 @@ namespace DGD208_Spring2025_UmutOhri
         {
             mainMenu = new Menu("Main Menu", new List<string>
             {
-
-
                 "Adopt a pet",
                 "View pet stats",
                 "Use item on pet",
@@ -28,25 +28,23 @@ namespace DGD208_Spring2025_UmutOhri
             });
         }
 
-        public void Run()
+        public async Task RunAsync()
         {
-            
             ConsoleHelper.WriteCentered("PET SİMÜLATÖR", ConsoleColor.Cyan, true);
             ConsoleHelper.WriteCentered("v1.0", ConsoleColor.DarkCyan);
+
             while (isRunning)
             {
                 mainMenu.Display();
                 int choice = mainMenu.GetChoice();
-                ProcessMainMenuChoice(choice);
+                await ProcessMainMenuChoice(choice);
             }
         }
 
-        private void ProcessMainMenuChoice(int choice)
+        private async Task ProcessMainMenuChoice(int choice)
         {
             switch (choice)
             {
-                
-                
                 case 1:
                     AdoptPet();
                     break;
@@ -54,7 +52,7 @@ namespace DGD208_Spring2025_UmutOhri
                     ViewPetStats();
                     break;
                 case 3:
-                    Console.WriteLine("Item usage feature coming soon!");
+                    await UseItemOnPetAsync();
                     break;
                 case 4:
                     DisplayCreatorInfo();
@@ -67,6 +65,73 @@ namespace DGD208_Spring2025_UmutOhri
                     Console.WriteLine("Invalid choice!");
                     break;
             }
+        }
+
+        private async Task UseItemOnPetAsync()
+        {
+            if (pets.Count == 0)
+            {
+                Console.WriteLine("\nYou don't have any pets yet!");
+                await Task.Delay(1000);
+                return;
+            }
+
+            Console.WriteLine("\nSelect a pet:");
+            for (int i = 0; i < pets.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {pets[i].Name} ({pets[i].Type})");
+            }
+
+            int petIndex;
+            while (!int.TryParse(Console.ReadLine(), out petIndex) || petIndex < 1 || petIndex > pets.Count)
+            {
+                Console.WriteLine("Invalid selection!");
+            }
+            Pet selectedPet = pets[petIndex - 1];
+
+            var suitableItems = ItemDatabase.Items
+                .Where(item => item.SuitablePets.Contains(selectedPet.Type))
+                .ToList();
+
+            if (suitableItems.Count == 0)
+            {
+                Console.WriteLine("No suitable items available for this pet!");
+                await Task.Delay(1000);
+                return;
+            }
+
+            Console.WriteLine("\nSelect an item:");
+            for (int i = 0; i < suitableItems.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {suitableItems[i].Name} (+{suitableItems[i].StatIncrease} stat, {suitableItems[i].UsageTime}s)");
+            }
+
+            int itemIndex;
+            while (!int.TryParse(Console.ReadLine(), out itemIndex) || itemIndex < 1 || itemIndex > suitableItems.Count)
+            {
+                Console.WriteLine("Invalid selection!");
+            }
+            Item selectedItem = suitableItems[itemIndex - 1];
+
+            Console.WriteLine($"\nUsing {selectedItem.Name} on {selectedPet.Name}...");
+            await Task.Delay(selectedItem.UsageTime * 1000);
+
+            switch (selectedItem.Type)
+            {
+                case ItemType.Food:
+                    selectedPet.IncreaseStat(PetStat.Hunger, selectedItem.StatIncrease);
+                    break;
+                case ItemType.Toy:
+                    selectedPet.IncreaseStat(PetStat.Fun, selectedItem.StatIncrease);
+                    break;
+                case ItemType.Bed:
+                    selectedPet.IncreaseStat(PetStat.Sleep, selectedItem.StatIncrease);
+                    break;
+            }
+
+            Console.WriteLine($"\n{selectedPet.Name}'s stats improved!");
+            selectedPet.DisplayStats();
+            Console.ReadKey();
         }
 
         private void DisplayCreatorInfo()

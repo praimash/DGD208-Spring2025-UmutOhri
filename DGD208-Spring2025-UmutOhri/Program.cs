@@ -7,10 +7,10 @@
     {
         class Program
         {
-            static void Main(string[] args)
-            {
-                Game game = new Game();
-                game.Run();
-            }
+        static async Task Main(string[] args) 
+        {
+            Game game = new Game();
+            await game.RunAsync(); 
         }
+    }
     }

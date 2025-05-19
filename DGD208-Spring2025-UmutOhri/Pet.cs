@@ -20,7 +20,21 @@ namespace DGD208_Spring2025_UmutOhri
             Type = type;
             StartStatDecrease();
         }
-
+        public void IncreaseStat(PetStat stat, int amount)
+        {
+            switch (stat)
+            {
+                case PetStat.Hunger:
+                    Hunger = Math.Min(100, Hunger + amount);
+                    break;
+                case PetStat.Sleep:
+                    Sleep = Math.Min(100, Sleep + amount);
+                    break;
+                case PetStat.Fun:
+                    Fun = Math.Min(100, Fun + amount);
+                    break;
+            }
+        }
         private async void StartStatDecrease()
         {
             while (IsAlive)
