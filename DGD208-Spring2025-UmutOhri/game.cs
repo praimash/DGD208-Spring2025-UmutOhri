@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DGD208_Spring2025_UmutOhri;
 
 namespace DGD208_Spring2025_UmutOhri
 {
@@ -10,14 +11,43 @@ namespace DGD208_Spring2025_UmutOhri
         private List<Pet> pets = new List<Pet>();
         private Menu mainMenu;
         private bool isRunning = true;
+        private Thread musicThread; // Yeni eklenen müzik thread'i
 
         public Game()
         {
             InitializeMenus();
+            StartBackgroundMusic(); // Oyun başlar başlamaz müzik çalsın
+        }
+
+        private void StartBackgroundMusic()
+        {
+            musicThread = new Thread(() =>
+            {
+                while (isRunning)
+                {
+                    // 8-bit tarzı basit melodi
+                    Console.Beep(659, 150); // Mi
+                    Console.Beep(659, 150);
+                    Console.Beep(659, 150);
+                    Console.Beep(523, 100); // Do
+                    Console.Beep(659, 150);
+                    Console.Beep(784, 150); // Sol
+
+                    if (!isRunning) break;
+
+                    Thread.Sleep(2000); // Melodi arası
+                }
+            })
+            {
+                IsBackground = true // Ana thread bitince otomatik sonlansın
+            };
+            musicThread.Start();
         }
 
         private void InitializeMenus()
         {
+           
+
             mainMenu = new Menu("Main Menu", new List<string>
             {
                 "Adopt a pet",
@@ -30,15 +60,22 @@ namespace DGD208_Spring2025_UmutOhri
 
         public async Task RunAsync()
         {
-            ConsoleHelper.WriteCentered("PET SİMÜLATÖR", ConsoleColor.Cyan, true);
-            ConsoleHelper.WriteCentered("v1.0", ConsoleColor.DarkCyan);
+            
 
-            while (isRunning)
-            {
-                mainMenu.Display();
-                int choice = mainMenu.GetChoice();
-                await ProcessMainMenuChoice(choice);
-            }
+
+            ConsoleHelper.WriteCentered("PET SİMÜLATÖR", ConsoleColor.Cyan, true);
+                ConsoleHelper.WriteCentered("v1.1", ConsoleColor.DarkCyan);
+
+                while (isRunning)
+                {
+                    mainMenu.Display();
+                    int choice = mainMenu.GetChoice();
+                    await ProcessMainMenuChoice(choice);
+                }
+            
+
+
+
         }
 
         private async Task ProcessMainMenuChoice(int choice)
@@ -69,6 +106,7 @@ namespace DGD208_Spring2025_UmutOhri
 
         private async Task UseItemOnPetAsync()
         {
+            Console.Beep(988, 200);
             if (pets.Count == 0)
             {
                 Console.WriteLine("\nYou don't have any pets yet!");
@@ -136,6 +174,7 @@ namespace DGD208_Spring2025_UmutOhri
 
         private void DisplayCreatorInfo()
         {
+            Console.Beep(988, 200);
             Console.WriteLine("\nCreated by: [Umut Ohri], Student ID: [225040048]");
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
@@ -143,13 +182,14 @@ namespace DGD208_Spring2025_UmutOhri
 
         private void AdoptPet()
         {
+            Console.Beep(988, 200);
             Console.Write("\nEnter your pet's name: ");
             string name = Console.ReadLine();
 
             var petTypeMenu = new Menu("Select Pet Type", Enum.GetNames(typeof(PetType)).ToList());
             petTypeMenu.Display();
             PetType type = (PetType)(petTypeMenu.GetChoice() - 1);
-
+            
             Pet newPet = new Pet(name, type);
             newPet.OnPetDied += (pet) =>
             {
@@ -162,8 +202,10 @@ namespace DGD208_Spring2025_UmutOhri
             Console.ReadKey();
         }
 
+
         private void ViewPetStats()
         {
+            Console.Beep(988, 200);
             if (pets.Count == 0)
             {
                 Console.WriteLine("\nYou don't have any pets yet!");
